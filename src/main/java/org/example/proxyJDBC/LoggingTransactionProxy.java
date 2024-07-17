@@ -1,6 +1,5 @@
 package org.example.proxyJDBC;
 
-// LoggingTransactionProxy.java
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

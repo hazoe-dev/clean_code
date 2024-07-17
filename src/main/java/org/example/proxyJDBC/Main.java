@@ -1,6 +1,5 @@
 package org.example.proxyJDBC;
 
-// Main.java
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
