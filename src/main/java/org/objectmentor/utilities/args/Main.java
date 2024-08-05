@@ -4,6 +4,7 @@ package org.objectmentor.utilities.args;
 public class Main {
     /**
      * java -cp out org.objectmentor.utilities.args.Main -l -p 8080 -d /home/user
+     * https://github.com/ClausPolanka/cleancode-args/blob/master/src/main/java/com/objectmentor/utilities/args/firstdraft/booleanandstring/ArgsTest.java
      * @param args
      */
     public static void main(String[] args) {
