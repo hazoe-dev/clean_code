@@ -70,3 +70,111 @@ Dưới đây là những nguyên tắc mà mình nhớ được sau khi đọc:
   * Phải thể hiện được mục đích, ý đồ chức năng của nó: không thiếu để không rõ ràng, không thừa để đảm bảo tính bao đóng cần thiết.
   * Không gây hiểu lầm, hay khó hiểu bằng viết tắt
   * Chỉnh chu: không sai chính tả để có thể search được khi cần
+  *   * Từ vựng phải có giới hạn lĩnh vực phù hợp, gồm:
+  * Là những từ kỹ thuật chuyên môn để các đồng sự chúng ta hiểu với nhau.  
+    Ví dụ: UserFactory -> programer có thể nhận ra Factory pattern đang được apply dụng
+  * Là những từ chuyên ngành phù hợp của dự án (problem domain)
+    Ví dụ: trong e-commerce, mình sẽ quen với những danh từ như: Order, Product, Delivery, Cart...
+
+## Function
+- Nếu ta xem meaningful naming là những vốn từ phù hợp, thì ta có thể xem Hàm/ function như một đoạn văn để truyền tải một thông điệp nào đó.
+  Vì function được xem là một đơn vị nhỏ nhất trong một chương trình.
+
+Làm sao để có một 'đoạn văn' tốt?
+
+- Mục đích rõ ràng, đơn giản, dựa trên 2 nguyên tắc:
+  * Ngắn gọn: súc tích, small
+  * Do one thing: đơn nhiệm, dễ hiểu, single responsibility principle
+
+- Phân tích cú pháp tổng quan của một function:  
+
+  ```mermaid
+      graph LR
+        A[Arguments/input] --> B(Function)
+        B -->C(return value/ output/ no output: alter state, action)
+        
+        D[Data] --> E(algorithm)
+        E -->F(Program)
+  ```
+
+	* Xét theo argument:
+		* Rezo  : nilanic
+		* One   : Monadic
+		* Two   : Dyadic
+		* Three : Triadic
+		* More  : polyadic
+		
+	Tốt nhất là từ không có đến chỉ có 1 tham số. Như vậy thì hàm số đơn giản, dễ dùng vì người dùng không cần phải đọc lại signature để biết cách điền tham số đúng thứ tự và kiểu loại. Nhờ đó mà khi đọc mạch ý được khai thông liên tục không ngắt quãng, lợi lạc cho đọc hiểu hơn.  
+	
+	Hơn nữa, nếu quá nhiều args thì khi test sẽ có rất nhiều trường hợp phải check.  
+	
+		* Xét function với 1 tham số: Là kiểu phổ biến hơn cả  
+	| Type         	| Input     	 	| Function 				|	Output		|
+	|------------------|-------------------|-----------------------|---------------|
+	| Ask a question 	| n = "name file"   | fileExist(n)      	|True/False		|
+	| Transform     	| n = "name file"   | fileOpen(n)       	|OutputStream	|
+	| No output/ event | n = "name file"   | logActionFile(n)      |No output		|
+		
+    * Xét trường hợp từ 2 tham số:  
+			* Ta có thể chuyển thành object vì nó đủ phức tạp để định nghĩa thành một object. Khi dùng sẽ dễ hơn, rõ ràng hơn, ít sai hơn. Ví dụ: x, y => Point(x,y)  
+			* Khi ta khai báo 'arg ...' tức không xác định rõ số lượng thì có thể dùng 'List' để chuyển thành 1 tham số duy nhất và dễ xử lý hơn  
+		* Phải xét đến abstraction level của argument cho phù hợp với function để không làm hỏng tính bao đóng.    
+		Ví dụ: bạn muốn lấy phần trăm pin điênj thoại thì chỉ cần: getRemainingBatteryPercentage() thay vì   
+		```
+		int total = getTotalBatteryCapacity()
+		int time = getUsedTime()
+		
+		getRemainingBatteryPercentage(total, time)
+					
+	* Xét function side:
+		* Hạn chế dùng error code vì khi đó logic có thể trở nên phức tạp hơn vì ta luôn phải if-else check.  
+		Thay vào đó, mình nên dùng Exception vì:  
+			* Exception có thể mở rộng với inheritant, khi muốn thêm 1 loại thì không cần compile lại như việc sử dụng 1 Error contains. Tuân thủ nguyên tắc, Open close principle.  
+			* Trong trường hợp, ta chỉ trả ra một exception thì business sẽ gọn hơn rất nhiều vì chỉ cần 1 lần try catch.  
+			* Nếu exception phức tạp, ta có thể tách việc xử lý exception ra làm một nhiệm vụ riêng.  
+		* Nếu function tuân theo SRP thì việc đặt một cái tên mô tả phù hợp sẽ dễ hơn.
+		* Nên cân nhắc việc sử dụng inheristant thay vì switch vì nếu dùng switch khả năng cao bạn đang thực hiện nhiều hơn một nhiệm vụ: cụ thể là có thể dùng abstract factory.    
+		Cũng tương tự, khi bạn dùng 1 flag argument trong fucntion.  
+
+	* Xét output side:  
+		* Output argument: đó là trường hợp input lại trở thành output, như vậy thì cần phải đặt tên rõ ràng để người dùng không hiểu sai. Ví dụ: appendMessage(s, "tail") -> Nhưng nên chuyển thành s.append("tail") vì state của một object nên do chính object đó quản lý (ta có biến this)
+		* No side effect: Thật là một thách thức nếu cái tên mô tả của method không phản ánh một phần nó tác động.
+		VD:
+		```
+		boolean isValidPassword(String password){
+			...
+			initSession();
+			...
+		}
+  Thật khó nếu người dùng cố gắng sự dụng một API khác cần session nhưng không gọi isValidPassword(pwd) trước đó.
+
+**Kết luận**:  kích thước tổng thể của một hàm: tác giả có đưa ra những thông số tham khảo sau:
+* **Parameters**: không nên quá dài, gây khó khăn cho việc đọc hiểu và sử dụng function  
+Số lượng parameter lý tưởng nên <4 -> max = 3
+* 1 function chỉ thực hiện **một nhiệm vụ**, tức là phải tuân thủ nguyên tắc Single responsiblity Principle
+* **Độ dài** trung bình lý tưởng của một hàm là từ 20 dòng đổ xuống.
+
+**Lưu ý**:
+* Nhưng một function cũng phải phù hợp về mặt kích thước mới thật sự nên tách, nếu không thì sẽ dẫn đến bùng nổ số lượng functions làm code khó đọc hơn, vì nhỏ quá, ta luôn phải chuyển đến phần chi tiết để theo dõi.  
+  Nếu code của bạn đã thể hiển được ý đồ chức năng rồi thì không cần phải tách nó ra làm một function riêng.  
+  Ví dụ:
+  ```
+  product_list 0--;
+  -----------
+  void decreaseProductQuantity(){
+      product_list 0--;
+  }
+* Tác giả có đề cập đến stepdown với **TO** để cân nhắc mức độ trừu tượng phù hợp:  
+  VD:  
+- To book Order:
+  * To decrease each product
+    * To check quantity of product
+    * To decreate product
+  * To move payment session
+  * To export bill
+
+**Phương pháp**:
+- Viết một function đầu tiên, một bộ test case, áp dụng những nguyên tắc trên để refactor lại function đến khi thỏa mãn.
+  Chỉnh đi chỉnh lại cho đến khi ngắn gọn, mục đích hàm rõ ràng, tên hàm mô tả đúng mục đích,...
+
+
