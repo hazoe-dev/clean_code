@@ -163,8 +163,8 @@ Làm sao để có một 'đoạn văn' tốt?
     * Xét function side:
         * Hạn chế dùng error code vì khi đó logic có thể trở nên phức tạp hơn vì ta luôn phải if-else check.  
           Thay vào đó, mình nên dùng Exception vì:
-            * Exception có thể mở rộng với inheritant, khi muốn thêm 1 loại thì không cần compile lại như việc sử dụng 1
-              Error contains. Tuân thủ nguyên tắc, Open close principle.
+            * Exception có thể mở rộng với inheritance, khi muốn thêm 1 loại thì không cần compile lại như việc sử dụng 1
+              Error constants. Tuân thủ nguyên tắc, Open close principle.
             * Trong trường hợp, ta chỉ trả ra một exception thì business sẽ gọn hơn rất nhiều vì chỉ cần 1 lần try
               catch.
             * Nếu exception phức tạp, ta có thể tách việc xử lý exception ra làm một nhiệm vụ riêng.
@@ -221,4 +221,357 @@ Làm sao để có một 'đoạn văn' tốt?
 - Viết một function đầu tiên, một bộ test case, áp dụng những nguyên tắc trên để refactor lại function đến khi thỏa mãn.
   Chỉnh đi chỉnh lại cho đến khi ngắn gọn, mục đích hàm rõ ràng, tên hàm mô tả đúng mục đích,...
 
+### Comment
 
+Một code viết đủ tốt ( gồm tên hàm, tên biến , logic, thụt dòng, ...) tự bản thân nó đã là một document hoàn hảo cho chính nó.
+Nó đủ tính mô tả để truyền tải hết trách nhiệm và chức năng của chính nó mà không cần đến comment.
+
+Nhưng nếu bạn chưa làm được,
+Và vẫn cần dùng đến comment thì hãy lưu ý:
+
+- Đừng bỏ những comment chiếu lệ vào làm lộn xộn mã
+- Đừng bỏ comment history vì giờ đã có source control
+- Đừng comment code cũ mà hãy mạnh dạn xóa bỏ.
+  Vì một comment cũ sẽ gắn liền với những biến, code không còn tồn tại, gây hiểu nhầm hoặc khó hiểu.
+  Người đọc nó tiếp theo sẽ lo ngại về sự cần thiết của nó và cũng không dám xóa. Và nó trường tồn ở đó chỉ để gây bối rối và nhầm lẫn.
+- Hạn chế dùng comment nếu được vì code document tốt nhất vì nó liên tục được cập nhật nhưng comment có thể bị lãng quên và trở thành rào cản truyền tải những thông tin sai lệch.
+- Nếu buộc phải dùng, có một vài trường hợp:
+    * Việc giải thích những code có độ phức tạp kỹ thuật cao hay lý do tại sao bạn dùng logic này thay vì cách khác.  
+      Hay để nó mang một thông tin giá trị như bổ sung kiến thức, những lý do cân nhắc cẩn thận.
+
+- Hạn chế dùng nhiều ngôn ngữ gây khó hiểu. Ví dụ:
+  1 file jsp có code java, html, jstl, natural language.
+  Khi comment bạn có thể dùng thẻ `<pre>` để giữ lại định dạng thay vì thẻ `<ul>, <li>` là tăng độ phức tạp của nó.  
+
+
+### Format
+- Đơn giản là thụt lề, tuân thủ định dạng của ngôn ngữ của tổ chức.
+- Sự thống nhất này mang lại tính đọc hiểu cao.
+- Lưu ý: Kiến trúc sẽ có độ ưu tiên cao hơn convention vì nó có thể bị phá vỡ.
+  Một method khai báo adstract phải được implemment ở class con.
+  Nhưng chuẩn đặt tên có thể bị bỏ qua vì để tuân thủ kiến trúc.
+
+### Object and data structure:
+
+- Là hai khái niệm mang tính đối lập và bổ sung cho nhau.
+    * Object: hidden data, public những thao tác/ operations/ behaviors có ý nghĩa với những data nó đang mang, có thể phản ánh một business logic nào đó, abstraction.
+    * Data structure: public data nó đang chứa, và không có một phương thức có ý nghĩa nào.
+
+  Không phải lúc nào chúng ta cũng cần object.
+
+
+|  |Object | Data structure | 
+  |------|-------|----------------|
+|Thêm một kiểu mới  | Dễ  | Khó  |
+|Thêm một phương thức mới | Khó | Dễ | 
+
+    ```  
+        # Object with inheritance
+        
+        class abstract ComponentSystem {
+            public abstract int pay();
+        }
+        
+        class Employee extends ComponentSystem {
+            private int salary;
+            private int bonus;
+            
+            public Employee (int salary, int bonus){
+                this.salary = salary;
+                this.bonus = bonus;
+            }
+            
+            public int pay(){
+                return this.salary + this.bonus;
+            }
+        }
+        
+        class OperationSystem extends ComponentSystem {
+            private int cost;
+            
+            public OperationSystem (int cost){
+                this.cost = cost;
+            }
+            
+            public int pay(){
+                return this.cost;
+            }
+        }
+        
+        # client uses
+        
+        class Accounting{
+            public int getTotalCost(List<ComponentSystem> components){
+                int total =0;
+                for (ComponentSystem component: components){
+                    total += component.pay();
+                }
+            }
+        }
+
+    ```  
+	# Requirement changes########
+	# Add one more type
+	
+	class Organization extends ComponentSystem {
+		private int cost;
+		
+		public Organization (int cost){
+			this.cost = cost;
+		}
+		
+		public int pay(){
+			return this.cost;
+		}
+	}
+
+Kết luận:
+- Client hầu như không phải change gì nữa khi thêm một type with abstract object.  
+
+    ```
+        # Requirement changes########
+        # Add one method
+        
+        class abstract ComponentSystem {
+            public abstract int pay();
+            public abstract int getDepreciationExpense();
+        }
+        
+        class Employee extends ComponentSystem {
+            private int salary;
+            private int bonus;
+            
+            public Employee (int salary, int bonus){
+                this.salary = salary;
+                this.bonus = bonus;
+            }
+            
+            public int pay(){
+                return this.salary + this.bonus;
+            }
+            
+            public int getDepreciationExpense(){
+                return 0;
+            }
+        }
+        
+        class OperationSystem extends ComponentSystem {
+            private int cost;
+            
+            public OperationSystem (int cost){
+                this.cost = cost;
+            }
+            
+            public int pay(){
+                return this.cost;
+            }
+            
+            public int getDepreciationExpense(){
+                return this.cost * 0.2;
+            }
+        }
+        
+        # Client uses
+        
+        class Accounting{
+            public int getTotalCost(List<ComponentSystem> components){
+                int total =0;
+                for (ComponentSystem component: components){
+                    total += component.pay();
+                }
+            }
+            
+            public int getDepreciationExpense(List<ComponentSystem> components){
+                int total =0;
+                for (ComponentSystem component: components){
+                    total += component.getDepreciationExpense();
+                }
+                
+                return total;
+            }
+        }
+	
+	
+Kết luận:  
+- Hầu như tất cả các classes bị ảnh hưởng khi thêm một behavior with abstract object.
+	
+	
+VD về data structure:  
+
+    ```
+	enum ShapeType {
+		CIRCLE, SQUARE
+	}
+
+	class Circle {
+		int radius;
+		ShapeType type = ShapeType.CIRCLE;
+
+		public Circle(int radius) {
+			this.radius = radius;
+		}
+	}
+
+	class Square {
+		int side;
+		ShapeType type = ShapeType.SQUARE;
+
+		public Square(int side) {
+			this.side = side;
+		}
+	}
+
+	class Calculator {
+		public int getPerimeter(List<Object> shapes) {
+			int total = 0;
+			for (Object shape : shapes) {
+				switch (getShapeType(shape)) {
+					case CIRCLE:
+						Circle circle = (Circle) shape;
+						total += (int) (2 * Math.PI * circle.radius);
+						break;
+					case SQUARE:
+						Square square = (Square) shape;
+						total += 4 * square.side;
+						break;
+					default:
+						throw new IllegalArgumentException("Unknown shape type");
+				}
+			}
+			return total;
+		}
+
+		private ShapeType getShapeType(Object shape) {
+			if (shape instanceof Circle) {
+				return ((Circle) shape).type;
+			} else if (shape instanceof Square) {
+				return ((Square) shape).type;
+			} else {
+				throw new IllegalArgumentException("Unknown shape instance");
+			}
+		}
+	}
+
+
+    ```
+	# Requirement changes########
+	# Add one more type
+	
+	enum ShapeType {
+		CIRCLE, SQUARE, RECTANGLE
+	}
+	
+	class Rectangle {
+		int length;
+		int width;
+		ShapeType type = ShapeType.RECTANGLE;
+
+		public Square(int length, int width) {
+			this.length = length;
+			this.width = width;
+		}
+	}
+	
+	class Calculator {
+		public int getPerimeter(List<Object> shapes) {
+			int total = 0;
+			for (Object shape : shapes) {
+				switch (getShapeType(shape)) {
+					case CIRCLE:
+						Circle circle = (Circle) shape;
+						total += (int) (2 * Math.PI * circle.radius);
+						break;
+					case SQUARE:
+						Square square = (Square) shape;
+						total += 4 * square.side;
+						break;
+					case RECTANGLE:
+						Rectangle rectangle = (Rectangle) shape;
+						total += 2 * (rectangle.length + rectangle.width);
+						break;
+					default:
+						throw new IllegalArgumentException("Unknown shape type");
+				}
+			}
+			return total;
+		}
+
+		private ShapeType getShapeType(Object shape) {
+			if (shape instanceof Circle) {
+				return ((Circle) shape).type;
+			} else if (shape instanceof Square) {
+				return ((Square) shape).type;
+			} else if (shape instanceof Rectangle) {
+				return ((Rectangle) shape).type;
+			}else {
+				throw new IllegalArgumentException("Unknown shape instance");
+			}
+		}
+	}  
+
+Kết luận:  
+- Client có nhiều places bị ảnh hưởng khi thêm một type with data structure.
+
+    ```
+	# Requirement changes########
+	# Add one method
+	
+	class Calculator {
+		public int getArea(List<Object> shapes) {
+			int total = 0;
+			for (Object shape : shapes) {
+				switch (getShapeType(shape)) {
+					case CIRCLE:
+						Circle circle = (Circle) shape;
+						total += (int) (Math.PI * circle.radius * circle.radius);
+						break;
+					case SQUARE:
+						Square square = (Square) shape;
+						total += square.side * square.side;
+						break;
+					default:
+						throw new IllegalArgumentException("Unknown shape type");
+				}
+			}
+			return total;
+		}
+		....
+	}
+
+Kết luận:
+- Client chỉ duy nhất 1 class bị ảnh hưởng khi thêm một behavior with data structure.
+
+
+Tùy thuộc vào nhu cầu mà object hay data structure sẽ được cân nhắc sử dụng.
+
+### Exception
+- Có 2 loại checked và unchecked/ runtime.
+  Nhưng nêú dùng checked bạn hãy cân nhắc về việc bạn phải throws nó lên high abstraction level.
+  Tức là, nó có thể vi phạm "Dependency Inversion Principle (DIP): High-level modules should not depend on low-level modules. Both should depend on abstractions."
+
+### Unit test
+- Một code phải có sự đảm bảo của unit test cases thì mới có thể refactor dễ dàng được.
+- Tác giả có đề cập đến TDD với:   
+Bạn phải viết test trước khi viết code, đi từ logic đơn giản đến phức tạp với mọi case của code. Từ đó, bạn sẽ có một bộ test case cover mọi cases và quá trình viết cũng đơn giản hơn vì bạn phải implement sao cho code có thể test được.
+
+1. Bạn không được viết code nếu chưa có một test fail
+2. Bạn không được viết code tiếp nếu có một test fail đang không compile được
+3. Bạn không được viết test case tiếp nếu có một test case fail chưa pass
+
+Một test case sẽ có các tính chất sau:  
+**F.R.I.S.T**  
+* F: Fast: phải nhanh để chạy thường xuyên
+* R: Reliable: lặp lại nhưng phải luôn cùng một kết quả
+* I: Isolated: test case 1 không bị ảnh hưởng bởi kết quả của test case 2
+* S: Self-validating: phải nêu rõ là pass hay fail (assert) tự động
+* T: Timely: viết sớm, lý tưởng là trước khi viết code
+
+
+## Lời kết
+- Trên đây là một phần những kinh nghiệm viết mã rõ ràng mà tác giả nêu qua góc nhìn của mình.
+    * Nó không đầy đủ nhất, không hoàn hảo nhất.
+    * Nhưng nó là hệ thống những nguyên tắc căn bản mà tuân theo thì lợi ích là thấy ngay được, rèn ngay được.
+- Biết mà không làm, cũng không thật sự là biết:
+    * Và quá trình từ biết đến làm cần thời gian, lòng dũng cảm để thay đổi và cam kết vận dụng từ chính người học.
+
+Mong mọi người sẽ giữ được nhiệt tâm trên con đường học tập và rèn luyện của chính mình.
