@@ -234,21 +234,21 @@ Và vẫn cần dùng đến comment thì hãy lưu ý:
 - Đừng comment code cũ mà hãy mạnh dạn xóa bỏ.
   Vì một comment cũ sẽ gắn liền với những biến, code không còn tồn tại, gây hiểu nhầm hoặc khó hiểu.
   Người đọc nó tiếp theo sẽ lo ngại về sự cần thiết của nó và cũng không dám xóa. Và nó trường tồn ở đó chỉ để gây bối rối và nhầm lẫn.
-- Hạn chế dùng comment nếu được vì code document tốt nhất vì nó liên tục được cập nhật nhưng comment có thể bị lãng quên và trở thành rào cản truyền tải những thông tin sai lệch.
+- Hạn chế dùng comment nếu được vì code là document tốt nhất vì nó liên tục được cập nhật nhưng comment có thể bị lãng quên và trở thành rào cản truyền tải những thông tin sai lệch.
 - Nếu buộc phải dùng, có một vài trường hợp:
     * Việc giải thích những code có độ phức tạp kỹ thuật cao hay lý do tại sao bạn dùng logic này thay vì cách khác.  
       Hay để nó mang một thông tin giá trị như bổ sung kiến thức, những lý do cân nhắc cẩn thận.
 
 - Hạn chế dùng nhiều ngôn ngữ gây khó hiểu. Ví dụ:
   1 file jsp có code java, html, jstl, natural language.
-  Khi comment bạn có thể dùng thẻ `<pre>` để giữ lại định dạng thay vì thẻ `<ul>, <li>` là tăng độ phức tạp của nó.  
+  Khi comment bạn có thể dùng thẻ `<pre>` để giữ lại định dạng thay vì thẻ `<ul>, <li>` làm tăng độ phức tạp của nó.  
 
 
 ### Format
-- Đơn giản là thụt lề, tuân thủ định dạng của ngôn ngữ của tổ chức.
+- Đơn giản là thụt lề, tuân thủ định dạng của ngôn ngữ, convention/ quy ước của tổ chức.
 - Sự thống nhất này mang lại tính đọc hiểu cao.
 - Lưu ý: Kiến trúc sẽ có độ ưu tiên cao hơn convention vì nó có thể bị phá vỡ.
-  Một method khai báo adstract phải được implemment ở class con.
+  Một method khai báo abstract phải được implement ở class con.
   Nhưng chuẩn đặt tên có thể bị bỏ qua vì để tuân thủ kiến trúc.
 
 ### Object and data structure:
@@ -539,7 +539,7 @@ Kết luận:
 	}
 
 Kết luận:
-- Client chỉ duy nhất 1 class bị ảnh hưởng khi thêm một behavior with data structure.
+- Chỉ duy nhất 1 class bị ảnh hưởng khi thêm một behavior with data structure.
 
 
 Tùy thuộc vào nhu cầu mà object hay data structure sẽ được cân nhắc sử dụng.
@@ -568,7 +568,7 @@ Một test case sẽ có các tính chất sau:
 
 
 ## Lời kết
-- Trên đây là một phần những kinh nghiệm viết mã rõ ràng mà tác giả nêu qua góc nhìn của mình.
+- Trên đây là một phần những kinh nghiệm viết về mã rõ ràng mà tác giả nêu qua góc nhìn của mình.
     * Nó không đầy đủ nhất, không hoàn hảo nhất.
     * Nhưng nó là hệ thống những nguyên tắc căn bản mà tuân theo thì lợi ích là thấy ngay được, rèn ngay được.
 - Biết mà không làm, cũng không thật sự là biết:
