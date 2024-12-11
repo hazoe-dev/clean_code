@@ -9,7 +9,7 @@ Thông điệp truyền tải mạnh mẽ nhất xuyên suốt toàn bộ nội 
 ```mermaid
 graph LR
     A[Why] --> B(How)
-    B --> C(Góc nhìn 'Detail, tiểu tiết')
+    B --> C(Góc nhìn 'Detail, chi tiết' với java)
 ```
 
 ## "Why" cần "clean code", cần trình bày rõ ràng
@@ -140,11 +140,11 @@ Làm sao để có một 'đoạn văn' tốt?
 
     * Xét function với 1 tham số: Là kiểu phổ biến hơn cả
 
-  | Type         	   | Input     	 	   | Function 				       | 	Output		     |
-  |------------------|-----------------|---------------------|---------------|
-  | Ask a question 	 | n = "name file" | fileExist(n)      	 | True/False		  |
-  | Transform     	  | n = "name file" | fileOpen(n)       	 | OutputStream	 |
-  | No output/ event | n = "name file" | logActionFile(n)    | No output		   |
+  | Type         	    | Input     	 	   | Function 				                 | 	Output		       |
+  |-------------------|-----------------|-------------------------------|-----------------|
+  | Ask a question    | n = "name file" | Ask - existFile(n)      	     | True/False	     |
+  | Transform     	   | n = "name file" | Transform - openFile(n)       | OutputStream	   |
+  | No output/ event  | n = "name file" | Event - logActionFile(n)      | No output       |
 
     * Xét trường hợp từ 2 tham số:  
       * Ta có thể chuyển thành object vì nó đủ phức tạp để định nghĩa thành một object. Khi dùng sẽ dễ hơn, rõ ràng hơn,
